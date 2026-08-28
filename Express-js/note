@@ -1,0 +1,241 @@
+*******************
+Query Params
+*****************
+
+req.query => this returns an object {key: 'value', key2: 'value2'}
+
+in vanilla node, you would have to parse the url to get the query params. In express, it is done for you.
+vanilla node example:
+const urlObj = new URL(req.url, `http://${req.headers.host}`);
+const queryParams = Object.fromEntries(urlObj.searchParams.entries());
+const { continent, country, is_open_to_public } = queryObj
+
+e.g
+import express from "express";
+import {startups} from "./data/data.js";
+
+const app = express();
+
+app.get("/api", (req, res) => {
+    let filteredData = startups
+    const { industry, country, continent, is_seeking_funding, has_mvp } = req.query
+
+    if (industry) {
+        filteredData = filteredData.filter((startup) => startup.industry.toLowerCase() === industry.toLowerCase())
+    }
+    if (country) {
+        filteredData = filteredData.filter((startup) => startup.country.toLowerCase() === country.toLowerCase())
+    }
+    if (continent) {
+        filteredData = filteredData.filter((startup) => startup.continent.toLowerCase() === continent.toLowerCase())
+    }
+    if (is_seeking_funding) {
+        filteredData = filteredData.filter((startup) => startup.is_seeking_funding === (is_seeking_funding === "true"))
+    }
+    if (has_mvp) {
+        filteredData = filteredData.filter((startup) => startup.has_mvp === (has_mvp === "true"))
+    }
+
+    res.json(filteredData);
+});
+  
+
+
+
+**********************
+Path Params
+**********************
+
+req.params => this returns an object {key: 'value', key2: 'value2'}
+
+
+app.get('/api/crypto-name/:currency', (req, res) => {
+
+    console.log(req.params)
+    res.json()
+})
+
+app.listen(8000, () => console.log('listening 8000'))
+
+
+
+***********************
+ROUTE
+***********************
+
+// route '/api/products'
+
+// controller {
+//     res.json({data: 'products'})
+// }
+
+//CONTROLLERS ARE THE FUNCTIONS THAT HANDLE THE LOGIC OF THE ROUTE. THEY ARE SEPARATED FROM THE ROUTE FOR 
+// BETTER ORGANIZATION AND MAINTAINABILITY.
+
+import express from 'express'
+
+const app = express()
+
+const apiRouter = express.Router()
+
+const productsController = (req, res) => {
+    res.json({data: 'products'})
+}
+
+const servicesController = (req, res) => {
+    res.json({data: 'service'})
+}
+
+apiRouter.get('/products', productsController)
+
+apiRouter.get('/services', servicesController)
+
+app.use('/api', apiRouter)
+
+app.listen(8000, () => console.log('listening 8000'))
+
+
+************************
+CORS
+***********************
+CORS stands for Cross-Origin Resource Sharing. It is a security feature implemented by web browsers to restrict web pages from making requests to a different domain than the one that served the web page.
+
+In Express.js, you can enable CORS by using the `cors` middleware. Here's how to do it:
+
+1. Install the `cors` package:  
+    npm install cors
+    
+2. Use the `cors` middleware in your Express app:   
+
+        import cors from 'cors'
+
+        const PORT = 8000
+        import express from 'express'
+        const app = express()
+
+        app.use(cors())
+
+
+***********************
+Middleware
+***********************
+middleware functions are functions that have access to the request object (req), 
+the response object (res), and the next middleware function in the application’s 
+request-response cycle. Middleware functions can perform the following tasks:
+
+- Execute any code.
+- Make changes to the request and the response objects.
+- End the request-response cycle.
+- Call the next middleware function in the stack.
+
+If the current middleware function does not end the request-response cycle, it must call next() 
+to pass control to the next middleware function. Otherwise, the request will be left hanging.
+
+Here's an example of a simple middleware function that logs the request method and URL:
+
+import express from 'express'
+
+const app = express()
+
+// Middleware function
+const loggerMiddleware = (req, res, next) => {
+    console.log(`${req.method} ${req.url}`)
+    next() // Pass control to the next middleware function
+}
+
+
+
+*************************
+Serving Static Files
+*************************
+
+In Express.js, you can serve static files (like HTML, CSS, JavaScript, images, etc.) 
+using the built-in `express.static` middleware. This allows you to serve files from 
+a specific directory on your server.
+
+Here's how to do it:
+
+import express from 'express'
+import { request } from "https"
+
+const app = express()
+const PORT = 8000
+
+app.use(express.static('public'))
+
+
+*************************
+CREATING DB in SQLITE
+*************************
+
+
+async function createTable() {
+
+  const db = await open({
+    filename: path.join('database.db'),
+    driver: sqlite3.Database
+  })
+
+  await db.exec(`
+  CREATE TABLE IF NOT EXISTS abductions (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    location TEXT NOT NULL,
+    details TEXT NOT NULL
+  )
+  `)
+
+  await db.close()
+  console.log('Table abductions created')
+}
+
+createTable()
+
+import sqlite3 from 'sqlite3'
+import { open } from 'sqlite'
+import path from 'node:path'
+
+
+export async function viewAllProducts() {
+  const db = await open({
+    filename: path.join('database.db'), 
+    driver: sqlite3.Database
+  });
+
+  try {
+    const abductions = await db.all('SELECT * FROM abductions')
+    console.table(abductions) 
+  } catch (err) {
+    console.error('Error fetching products:', err.message)
+  } finally {
+    await db.close()
+  }
+}
+
+viewAllProduct
+
+SQLITE methods:
+- db.run(sql, [params]) - Executes a SQL statement that doesn't return any data (e.g., INSERT, UPDATE, DELETE).
+- db.get(sql, [params]) - Executes a SQL statement and returns the first row of the result set.
+- db.all(sql, [params]) - Executes a SQL statement and returns all rows of the result set.
+- db.each(sql, [params], callback) - Executes a SQL statement and calls the callback for each row in the result set.
+- db.close() - Closes the database connection.
+
+example of inserting data into the abductions table:
+
+async function insertAbduction(location, details) {
+  const db = await open({
+    filename: path.join('database.db'),
+    driver: sqlite3.Database
+  });
+
+  try {
+    await db.run('INSERT INTO abductions (location, details) VALUES (?, ?)', [location, details]);
+    console.log('Abduction inserted successfully');
+  } catch (err) {
+    console.error('Error inserting abduction:', err.message);
+  } finally {
+    await db.close();
+  }
+}
+
+

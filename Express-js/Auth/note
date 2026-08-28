@@ -1,0 +1,96 @@
+App Flow:
+create users table
+rgister route
+validate user
+add user to db
+hash amd bcrypt
+add express session
+environment variable 
+display a user name
+login
+add logout funtionality
+add cart functionality
+add cart table
+cart count
+protect cart routes
+
+Validation:
+check all fields exist
+Trim the whitespace from start and end
+Use regex on user name but not name (cause we only want certain characters in username)
+Validate email address
+
+Tools to use:
+We can use npm package called Validator ->  we can use isEmail(str[, option]) method
+npm install validator
+usage:
+import validator from validator
+conoloe.log(validaor.isEmail(item))
+
+HASHING:
+Bcrptjs Demo : Hashing
+
+import express from 'express'
+import bcrypt from 'bcryptjs'
+
+// const password = 'skywalker96'
+
+// const hashed = await bcrypt.hash(password, 10)
+// console.log(hashed)
+
+const userInDb = {
+  name: 'Luke Skywalker',
+  password: '$2b$10$pyzxk19lHZbx/aGmjbVGeOswnmX7lwxnDg2RQUhnOSMhFeRYaXtSq'
+} 
+
+const loginAttempt = {
+  name: 'Luke Skywalker',
+  password: 'skywalker95'
+}
+
+const userIsValid = await bcrypt.compare(loginAttempt.password, userInDb.password)
+console.log(userIsValid)
+
+const app = express()
+
+app.listen(8000, () => console.log('listening 8000'))
+
+
+SESSIONS
+http is stateless this mean each request from a client to a server is independent and contains no
+knowledge of previous interactions
+
+the express-session package provides a way to store user-specific data, such as login state, between http requests
+Session is supposed to be stored in session store susch as redis or mongo db
+
+import session from 'express-session'
+
+const app = express()
+const secret = process.env.SPITAL_SESSIONM_SECRET || 'test'
+
+app.use(session({
+    secret: secret
+    resave: false #prevents session from being saved vertime to the store on ever request
+    saveUninitiliaze: false :#prevent empty session from being stored e.g visitors
+    cookie: {
+        httpOnly: true, :#makes cookie inaccessible to javascript cant view with with document.cookie in browser helps against cross scripting attacks
+        secure: false, : means send over http not just https since we are in dev
+        sameSite: 'lax' : allows cookie to be sent on same site navigation like normal browsing and mostly drop cross site request
+    }
+}))
+
+req.session.userId = user.id // store user id in session
+
+Login Flow:
+1. User submits login form with username and password
+2. Server receives the request and checks if the username exists in the database
+3. If the username exists, the server compares the submitted password with the hashed password stored in the database using bcrypt.compare()
+4. If the passwords match, the server creates a session for the user and stores their user ID in the session
+5. The server sends a response back to the client indicating that the login was successful
+6. The client can now access protected routes that require authentication
+
+Logout Flow:
+1. User clicks on logout button
+2. Server receives the request and destroys the user's session
+3. The server sends a response back to the client indicating that the logout was successful
+4. The client is redirected to the login page or home page
