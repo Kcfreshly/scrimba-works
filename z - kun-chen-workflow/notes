@@ -1,0 +1,24 @@
+Memory:
+    Global: ~/.claude/Claude.model
+    Project:  ~/Agents.md
+kun uses a command that makes claude.md a symbolic link to agent.md
+
+Skills:
+most harness aside claude code may not know how to create skill out of the box
+you can use athropics/skills --skill skill-creator -g to help and install new skill
+
+
+Use problem bench:---
+Test agent ability to build problem end to end
+
+aside:
+    a good prompt-> Iexplain this repo in a concise way and give me a recap of what the recent PRs have been working on
+
+
+Creating Crewmatest:
+
+
+Spin up a git work tree for that other task ...
+find a way to clean these worktrees
+treehouse status
+use idle worktree instead of a new one
