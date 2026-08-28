@@ -1,0 +1,273 @@
+import OpenAI from "openai"
+import { checkEnvironment } from "./utils.js"
+
+const openai = new OpenAI({
+  apiKey: process.env.AI_KEY,
+  baseURL: process.env.AI_URL,
+  dangerouslyAllowBrowser: true
+})
+
+checkEnvironment();
+
+const userPrompt = "Suggest some gifts for someone who loves hiphop music"
+
+const userMessage = {
+  role: "user",
+  content: userPrompt
+}
+
+const response = await openai.chat.completions.create({
+  model: process.env.AI_MODEL,
+  messages: [ userMessage ]
+})
+
+
+Safely parsing HTML
+------------------------------------------------------
+
+  const html = marked.parse(giftSuggestions)
+
+  const safeHTML = DOMPurify.sanitize(html)
+  
+  // Display the gift suggestions 
+  outputContent.innerHTML = safeHTML
+
+
+
+STREAMING RESPONSES
+------------------------------------------------------
+
+const stream = await openai.chat.completions.create({
+  model: process.env.AI_MODEL,
+  messages,
+  stream: true,
+});
+
+// Log each chunk in formatted JSON as it arrives
+for await (const chunk of stream) {
+  console.log(chunk.choices[0].delta.content);
+}
+
+//for streaming we use fow with the await keyword so it knows we are awaiting an async function
+
+//THis is how streaming come, it comes in chunk 
+"AI provider URL": "https://api.openai.com/v1"
+AI model": "gpt-5-nano"
+  {
+    "id": "chatcmpl-D37IU2Eanbpyfea4rrbgFymgrhwK3",
+    "object": "chat.completion.chunk",
+    "created": 1769635406,
+    "model": "gpt-5-nano-2025-08-07",
+    "service_tier": "default",
+    "system_fingerprint": null,
+    "choices": [
+      {
+        "index": 0,
+        "delta": {
+          "role": "assistant",
+          "content": "",
+          "refusal": null
+        },
+        "finish_reason": null
+      }
+    ],
+    "obfuscation": "ZQ"
+  },
+  {
+    "id": "chatcmpl-D37IU2Eanbpyfea4rrbgFymgrhwK3",
+    "object": "chat.completion.chunk",
+    "created": 1769635406,
+    "model": "gpt-5-nano-2025-08-07",
+    "service_tier": "default",
+    "system_fingerprint": null,
+    "choices": [
+      {
+        "index": 0,
+        "delta": {
+          "content": "-"
+        },
+        "finish_reason": null
+      }
+    ],
+    "obfuscation": "nLO"
+  },
+  {
+    "id": "chatcmpl-D37IU2Eanbpyfea4rrbgFymgrhwK3",
+    "object": "chat.completion.chunk",
+    "created": 1769635406,
+    "model": "gpt-5-nano-2025-08-07",
+    "service_tier": "default",
+    "system_fingerprint": null,
+    "choices": [
+      {
+        "index": 0,
+        "delta": {
+          "content": " Classic"
+        },
+        "finish_reason": null
+      }
+    ],
+    "obfuscation": "4zGLAn0pFWpQ"
+  },
+
+
+
+🔥 Temperature = Creativity / Randomness
+------------------------------------------------------
+
+Temperature changes how strongly the model favors the most likely next token.
+
+Higher temperature = more surprising outputs.
+Lower temperature = more predictable outputs.
+
+🎯 Top_p = Nucleus Sampling
+------------------------------------------------------
+
+Instead of looking at all possible next tokens, the model only considers tokens whose cumulative probability reaches p.
+
+How They Work Together
+
+A useful mental model:
+
+Temperature = "How random should we be?"
+Top_p = "How many candidate words are we allowed to pick from?"
+
+
+
+CHAT COMPLETION VS RESPONSE OUTPUT
+------------------------------------------------------
+
+input: [
+    {
+      role: "system",
+      content: `You are the Gift Genie! 
+Your gift suggestions should feel thoughtful, specific, and genuinely useful. 
+Your response must be under 100 words. 
+Start directly with the gift suggestions. 
+Do not write an introduction or conclusion.`,
+    },
+    {
+      role: "user",
+      content: "Give me gift suggestions for my friend who likes hiphop music.",
+    },
+  ],
+});
+
+console.log(response.output_text);
+
+// const response = await openai.chat.completions.create({
+//   model: process.env.AI_MODEL,
+//   messages: [
+//     { role: "system", content: "..." },
+//     { role: "user", content: "..." },
+//   ],
+// });
+
+// console.log(response.choices[0].message.content);
+
+
+JSON OUTPUT: STRUCTURED OUTPUT:
+
+export const giftSchema = {
+  type: "json_schema",
+  json_schema: {
+    name: "gift_suggestions",
+    schema: {
+      type: "object",
+      properties: {
+        gifts: {
+          type: "array",
+          items: {
+            type: "object",
+            properties: {
+              name: { type: "string" },
+              price_range: { type: "string" },
+              why_its_good: { type: "string" },
+            },
+            required: ["name", "price_range", "why_its_good"],
+          },
+        },
+      },
+      required: ["gifts"],
+    },
+  },
+};
+
+
+// Make a gift suggestion request with the Chat Completions API
+async function getGiftSuggestion() {
+  const response = await openai.chat.completions.create({
+    model: process.env.AI_MODEL,
+    messages: [
+      {
+        role: "user",
+        content: `Suggest 3 gifts for a coffee lover.`,
+      },
+    ],
+    response_format: giftSchema
+  });
+
+  return response.choices[0].message.content;
+}
+
+✓ Parsed as JSON
+--------------------------------------------------
+Call 2:
+{"gifts":[{"name":"High-Quality Coffee Grinder","price_range":"$50 - $150","why_its_good":"A burr grinder helps unlock the full flavor potential of coffee beans, making it an essential tool for any coffee lover's brewing process."},{"name":"Specialty Coffee Subscription Box","price_range":"$15 - $30/month","why_its_good":"Monthly delivery of unique and high-quality coffee beans from around the world allows coffee lovers to explore new flavors and roasts."},{"name":"Personalized Coffee Mug","price_range":"$10 - $30","why_its_good":"A custom mug featuring their name or a favorite coffee-related quote makes their morning cup of joe feel even more special."}]}
+✓ Parsed as JSON
+
+
+WE can use response api
+
+export const giftSchemaResponses = {
+  type: "json_schema",
+  name: "gift_suggestions",
+  schema: {
+    type: "object",
+    additionalProperties: false,
+    properties: {
+      gifts: {
+        type: "array",
+        items: {
+          type: "object",
+          additionalProperties: false,
+          properties: {
+            name: { type: "string" },
+            price_range: { type: "string" },
+            why_its_good: { type: "string" },
+          },
+          required: ["name", "price_range", "why_its_good"],
+        },
+      },
+    },
+    required: ["gifts"],
+  },
+};
+
+async function getGiftSuggestion() {
+  const response = await openai.responses.create({
+    model: process.env.AI_MODEL,
+    input: `Suggest 3 gifts for a coffee lover.`,
+    text: {
+      format: giftSchemaResponses
+    }
+  });
+
+
+Difference btwn chat completion and response api
+------------------------------------------------------
+If I were starting a new agent project today:
+
+Simple chatbot → Chat Completions is fine.
+Agent with reasoning, memory, tools, structured outputs, evaluations → Responses API.
+
+
+
+tools
+------------------------------------------------------
+const response = await openai.responses.create({
+  model: process.env.AI_MODEL,
+  input: "Best coffee machines available right now under 300 euros.",
+  tools: [{ type: "web_search" }]
+});
+

@@ -1,0 +1,41 @@
+import openai from './config.js';
+
+/** Create embeddings representing the input text */
+async function main() {
+  const embedding = await openai.embeddings.create({
+    model: "text-embedding-ada-002",
+    input: "Hello, world!",
+  });
+  console.log(embedding);
+}
+main();
+
+
+
+Pair Text with Embedding
+
+aysnc function main(input){
+    await Promise.all(
+        input.map( async(textChunk)=>{
+            const embeddingResponse = await openai.embeddings.create({
+            model: "text-embedding-ada-002",
+            input: textChunk,
+            });
+
+            const data = { content: textChunk, embedding: embeddingResponse.data[0].embedding }
+                console.log(data)
+        })
+    )
+
+}
+
+cause there is a stream of await promises being returned, we wait for all
+
+Watch Scrimba to see how to create Vector DB with super base
+
+-- Create a table to store your documents
+create table documents (
+  id bigserial primary key,
+  content text, -- corresponds to the "text chunk"
+  embedding vector(1536) -- 1536 works for OpenAI embeddings
+);

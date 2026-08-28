@@ -1,0 +1,40 @@
+handles user click in handlegiftrequest() and sends prompt to server using an API rather than directly to the API sending our credentials
+
+
+We convert to stringify cause http only understands texts
+
+const response = await fetch('/api/gift', {
+    method: "POST",
+    headers: {
+    "Content-Type": "application/json"
+    },
+    body: JSON.stringify({ userPrompt })
+})
+
+const data = await response.json()
+
+
+Backend
+--------------------
+
+import express from "express"
+
+const app = express();
+app.use(express.json());
+
+app.post(url, callback);
+
+app.post('/api/gift', (res, req)=>{
+    const {userPrompt} = req.body;
+    console.log(userPrompt)
+
+    res.json({ message: `You asked for: "${userPrompt}"` });
+})
+
+const PORT = 3001
+
+app.listen(PORT, ()=>{
+    console.log(`Server running at http://localhost:${PORT}`);
+}
+)
+
