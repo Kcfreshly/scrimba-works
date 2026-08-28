@@ -1,0 +1,36 @@
+Assitive TEchnologies
+
+Screen reader
+Speech recognition software screen magnifier
+alternative input devices
+
+Accessibility says you should try to use it as less as possible
+e.g
+<button> I am a buytton</button>
+
+dont do
+<div> I am trying to be a button!<div>
+
+?Only use when it is extremely important and there is no other way
+
+
+Go to Dev > Accessiblity > Enable full page accessiblity tool
+
+Test your site with accessibility:
+such as contrast checker
+Automated tool e.g light house aXe accessibilty inspector
+AI
+
+in chrome > lighthouse in dev tools >. choose test and you will see a call
+
+
+Use Semantic HTML:
+This is the use of descriptive task
+
+<nav>
+<header>
+<main>
+<section>
+<footer>
+
+role="img" aria-label=" this image means something "
