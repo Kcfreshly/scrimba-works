@@ -1,0 +1,262 @@
+Specificity:
+
+id = 100 points
+classes = 10 points
+elements = 1 points
+
+Compound selector:
+
+class element{
+
+}
+e.g
+.home p{
+
+}
+
+specificity will be 
+
+10 1{
+
+}. making it 11 points because home is 10 and element is 1 points
+
+
+
+FLEX WRAP: contains e.g all your images that are inline to a max width
+E.G
+.thumbnails {
+    display: flex;
+    flex-wrap: wrap; or nowrap or wrap reverse
+    max-width: 560px;
+    margin: 50px auto;
+}
+
+FLEX GROW: this is used to make an element grow to fill the available space in a flex 
+container.
+E.G
+.thumbnails {
+    display: flex;
+    flex-wrap: wrap;
+    max-width: 560px;
+    margin: 50px auto;
+    flex-grow: 1;
+}
+
+FLEX BASIS: this is used to set the initial size of an element before the remaining 
+space is distributed.
+E.G
+.thumbnails {
+    display: flex;
+    flex-wrap: wrap;
+    max-width: 560px;
+    margin: 50px auto;
+    flex-grow: 1;
+    flex-basis: 200px;
+}
+
+FLEX SHRINK: this is used to set the initial size of an element before the remaining
+space is distributed.
+E.G
+.thumbnails {
+    display: flex;
+    flex-wrap: wrap;
+    max-width: 560px;
+    margin: 50px auto;
+    flex-grow: 1;
+    flex-basis: 200px;
+    flex-shrink: 1;
+}        
+
+overflow: hidden or visible or scroll or auto
+overflow-x and overflow-y
+
+
+FLOAT:
+
+Zindex: this works in a stack context. meaning <html> will be a base and other elements will stack ontop
+to make a container or an element the root e.g a div of some children within, then you have to make that
+container z-index = 0 and every other items will build on top of it
+
+em:
+this inherits the default font size of the parent of the element
+e.G
+<h1>
+    <span>hello</span>
+</h1>
+
+so h1 is parent and span is child. so if h1 has a font size of 20px, then the span will inherit that and if you set the span to 2em, 
+it will be 40px. if no font size is set on the parent, then it will inherit the default font size of the browser which is 16px. 
+so if you set the span to 2em, it will be 32px
+
+in case of margin and padding, em will be based on the font size of the element itself. 
+so if you set a margin of 2em on the span, it will be 40px.
+
+
+@media: this is used to make your website responsive. it is a conditional statement that will apply the css rules 
+within it if the condition is met. It is the if statement of css. e.g
+@media (max-width: 600px) {
+    .container {
+        width: 100%;
+    }
+}
+this statement will apply the css rules within it if the viewport width is less than or equal to 600px.
+if (max-width <= 600px){
+        .container {
+        width: 100%;
+    }
+}
+
+@media (min-width: 600px) {
+    .container {
+        width: 80%;
+    }
+}
+this statement will apply the css rules within it if the viewport width is greater than or equal to 600px.
+if (min-width >= 600px){
+        .container {
+        width: 80%;
+    }
+}
+
+you can also combine min-width and max-width to target a specific range of viewport widths. e.g
+@media (min-width: 500px) and (max-width: 799px) {
+    body {
+        color: aliceblue;
+        background-color: cornflowerblue;
+    }
+}
+
+@media (min-width: 800px) {
+    h1 {
+        font-size: 3.5rem;
+    }    
+}
+
+Mobile first approach: this is a design approach where you design for mobile devices first 
+and then scale up to larger devices.
+
+common breakpoints for responsive design are:
+320px - 480px: Mobile devices
+481px - 768px: iPads, Tablets
+769px - 1024px: Small screens, laptops
+1025px - 1200px: Desktops, large screens
+1280px and more: Extra large screens, TV
+
+
+Grid: this is a layout system that allows you to create complex layouts with rows and columns.
+
+grid-template-columns: this as the name implies specify the number of columns 
+grid-template-rows: this as the name implies specify the number of rows 
+gap: rows columns e.g: gap:.8em .6em
+
+fr : fr units represents a fraction of the available space in the grid. 
+e.g grid-tempplate-columns: 1fr 1fr 1fr 1fr => this means create 4 columns and ocuppy all spce evenly
+e.g grid-tempplate-columns: auto 1fr 1fr 1fr  => the first column will only take what it needs why the remaining
+will take up the spaces
+
+Grids rows and implicit grid
+
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 5em 5em;
+    gap: .5em;
+
+Looking at above example we see rows  were not define how many rows there should be, we only exlicitly say 
+row1 and row2 should have 5 em fixed width. and if we add more content to row 1 and two they will overflow
+cause we fixed the measurement. use align-items: value??
+
+
+Responsive Image Grid:
+
+.grid-container {
+    display: grid;
+    grid-gap: .5em;
+    grid-template-columns: repeat(5, 1fr);
+    grid-template-rows: 200px; this is explicitly defined. only the first row will be 200 others will be the 75px as below
+    grid-auto-rows: 75px;
+}
+
+Use auto fit to scale based on the dom dimension. 
+.grid-container {
+    display: grid;
+    grid-gap: .5em;
+    grid-template-columns: repeat(auto-fit, 1fr);
+    grid-auto-rows: 75px;
+}
+
+however 1 fr will only add 1 column and takes up the entire of the column use the below
+
+.grid-container {
+    display: grid;
+    grid-gap: .5em;
+    grid-template-columns: repeat(auto-fit, 100px);
+    grid-auto-rows: 75px;
+}
+
+since we define the size of each column then the dom will scale and increase or decrease
+number of images in a row
+
+
+Dense and MinMax:
+The example below we manipulated explicitly some of the images and misconfigured or introduced extra space
+However we can fix with grid-auto-flow: dense;
+
+.grid-container {
+    display: grid;
+    grid-gap: .5em;
+    grid-template-columns: repeat(auto-fit, 100px);
+    grid-auto-rows: 75px;
+    grid-auto-flow: dense;
+}
+
+.wide {
+    grid-column: span 2;
+}
+
+.tall {
+    grid-row: span 2;
+}
+
+.big {
+     grid-row: span 2;
+     grid-column: span 2;
+}
+
+Min Max :
+Defines a size range fgreater than or equal to min and less than or equal to max
+e.g minmax(100px, 1fr)
+
+.grid-container {
+    display: grid;
+    grid-gap: .5em;
+    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+    grid-auto-rows: 75px;
+    grid-auto-flow: dense;
+}
+
+This mean images wont go lesses than our min of 100px but will scale to fill empty spaces
+But will also not go too wide cause 1fr is containing it
+
+another example
+
+@media(min-width: 870px){
+/*
+Challenge:
+    1. Make sure the last 3 columns are a minimum 
+       of 70px each and a maximum of 1fr.
+*/
+    main {
+        grid-template-columns: repeat(12, 1fr);
+        /* grid-template-columns: repeat(9, 1fr) repeat(3, minmax(70px, 1fr)); */
+        grid-template-areas: 
+            "tech tech tech tech tech tech envi envi envi nasa nasa nasa"
+            "phys phys phys heal heal heal heal heal heal nasa nasa nasa"
+    }
+}
+
+
+UNIT USAGE
+rem : use rem unit for font sizes, no compounding and more predictable
+margin and padding : use em unit since they  proportionally scale based on element current font size
+Line height: use unitless
+images and height: use percentages or view port (vh vw)
+max-width: use pixel

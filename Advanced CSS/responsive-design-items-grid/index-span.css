@@ -1,0 +1,45 @@
+html, body {
+    margin: 1em;
+    padding: 0;
+}
+
+.grid-container {
+    display: grid;
+    grid-template: 1fr 1fr 1fr 1fr 1fr / 1fr 1fr 1fr;
+}
+
+.grid-item {
+    padding: .5em;
+    font-size: 2em;
+    color: black;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* 
+Challenge:
+Change the span counts we are using on these 
+selectors 👇 to fix this layout. 
+You will also need to add some spans for rows. 
+Think about how you do that!
+ */
+    
+header {
+    background-color: palegoldenrod;
+    grid-column: span 3;
+}
+nav {
+    background-color: lightcoral;
+    grid-row: span 3;
+}
+main {
+    background-color: lightgreen;
+    grid-row: span 3;
+    grid-column: span 2;
+}
+footer {
+    background-color: gold;
+    grid-column: span 3;
+}
+    

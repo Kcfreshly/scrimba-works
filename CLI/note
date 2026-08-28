@@ -1,0 +1,114 @@
+pwd  : directory you presently are working on
+ls: list content of current working directory
+cd : change directory
+clear : to clear the terminal
+
+Navigation :=====
+cd .. or go deeper with cd ../..
+ls .. 
+
+create and Delete Files :=====
+touch or new-file-items(windows) filename.txt
+rm filename.txt
+
+create and delete directories :=====
+mkdir dir_name
+rmdir dir_name
+rm -r dir_name  (use this when dir is not empty)
+
+
+write to files :======
+echo 'content to write'  (this just print to terminal)
+echo 'content to write' > hello.txt ( this overrite existing content)
+echo 'content to write' >> hello.txt 
+
+Read Files :======
+cat filename.txt (prints ouptut to stdout i.e terminal)
+cat hello.txt > hello_copy.txt ( read file content and writes into the other file it will create if file does not exist)
+cat hello.txt >> hello_copy.txt (to append rather than overwrite)
+
+echo $0: Tells you if you using shell or bash
+
+Options :====
+There are options thatcan be attached to a command to change its default behaviore.g
+rm -r (r = recursive)
+ls -l (l= long format)
+
+
+find Files and Directories :======
+ find [path] [option] [expression]
+ e.g find . -name 'forest*'
+ find options are:
+    search by name: -name 'forest*'
+    case insensitive search by name: -iname 'forest*'
+    search byt: -type f (files) or -type d (directories)
+    combine options: -type d -iname 'forest*'
+
+find .. -type f -iname  'large*' ( mean find a file in above dir with wildcard name that starts with large)
+
+Rename and moving of file :========
+mv [old_name.ext] [new_name.ext] (renaming)
+mv [name.txt] [new_location] (if path does not exist it will rename the file)
+cp [original_name.txt] [copy_name.txt]  
+cp -r cities cities_backup (add r for directories)
+
+
+Search Files :==============
+grep [patten] [files(s)]
+grep 'CEO' team.txt (grep gives all instances of the pattern you looking for and when it finds that pattern, it prints its entire line)
+
+grep [option] [pattern] [files(s)]
+grep -n ',' team*
+result: team.txt:1:AB, CEO and creative genius
+result: team.txt:2: NN, hard working intern
+
+-n -> means show line numbers
+-i -> case insensitive
+-r -> search recursively
+
+Replace content in files :========
+sed 's/pattern/replacement/' [filename]
+e.g sed 's/,/:/' team*
+note: note this only change first instance and also changes is only on the termninal, it does not affect the main file
+
+sed 's/pattern/replacement/[option(s)]' [filename]
+e.g .g sed 's/,/:/gI' team*
+- the g makes it global not just first instance
+- I means its case insensitive
+
+we can change the file with 2 options
+1. write to a new file
+e.g sed 's/,/:/' team* > new-file.txt
+2. Modify the file directly
+e.g sed -i 's/,/:/' team*
+on mac sed -i '' 's/,/:/' team*
+
+
+Count values in files :======
+wc [filenmae]
+e.g wc team.txt
+ 5 17 112 team.txt
+ 5 number of lines
+ 17 no of words
+ 112 bytes
+ there is always a first empty space at the begining
+
+ options
+ wc -l, -w, -c, -,
+ using the option l -> no lines only
+ -w -> no of word count only
+ -c - no of characters only
+
+
+ Sort files content :======
+ sort [options] [filename]
+ e.g sort team.txt
+ options:  -r -> reverse Z-A, -n -> numeric runmbers
+ uniq [filename] -> remove duplicates
+
+ using pipe character to combine
+ e.g sort [filename] | uniq
+
+ store the output:
+ e.g sort [filename] | uniq > [newfilename]
+ 

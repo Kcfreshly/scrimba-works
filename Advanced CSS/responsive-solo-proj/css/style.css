@@ -1,0 +1,192 @@
+/* Reset */
+html,
+body {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Roboto', sans-serif;
+}
+
+*,
+*::before,
+*::after {
+    box-sizing: inherit;
+}
+
+/* Elements */
+
+ul {
+    display: flex;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+p{
+    font-size: 1rem;
+    line-height: 1.5;
+    font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Header */
+
+header {
+    position: fixed;
+    width: 100%;
+    z-index: 1000;
+}
+
+.header-flex {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.5rem 2rem;
+    background: #fff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+}
+
+.logo img {
+    width: 34px;
+    height: 34px;
+    padding-right: 0.25rem;
+}
+
+.logo ul a {
+    text-decoration: none;
+    color: #0e0e0e;
+    font-size: 1.25rem;
+    font-weight: bold;
+}
+
+.nav li a {
+    margin-left: 1.5rem;
+    text-decoration: none;
+    font-size: 1rem;
+    font-weight: 500;
+    color: #090909;
+    cursor: pointer;
+}
+
+/* Banner */
+
+.banner {
+    position: relative;
+}
+
+.banner img {
+    width: 100%;
+    height: 70vh;
+    object-fit: cover;
+    display: block;
+}
+
+.banner-text {
+    position: absolute;
+    left: 5%;
+    bottom: 8%;
+    width: 90%;
+    max-width: 600px;
+    color: white;
+}
+
+.banner-text p {
+    font-size: 0.875rem;
+    opacity: 0.8;
+    margin: 0;
+    padding-bottom: 0.5rem;
+    text-transform: uppercase;
+}
+
+.banner-text h1 {
+    margin: 0.3em 0;
+    font-size: clamp(1.8rem, 6vw, 4rem);
+    line-height: 1.1;
+    font-weight: 700;
+}
+
+/* Grid */
+
+.grid-container {
+    margin: 2rem 1rem;
+}
+
+.grid-container h2,
+.grid-container p {
+    margin: 0;
+}
+
+.grid-container .card {
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    padding: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.grid-container .card img {
+    width: 100%;
+    display: block;
+    object-fit: cover;
+    padding-bottom: 1rem;
+}
+
+.grid-container .card p {
+    font-size: 1rem;
+    opacity: 0.7;
+    padding-bottom: 0.5rem;
+}
+
+.grid-container h2 {
+    font-size: 1.25rem;
+    color: #0e0e0e;
+    padding-bottom: 0.5rem;
+}
+
+/* Footer */
+
+footer {
+    background: #202020;
+    padding: 2rem;
+    text-align: center;
+    color: #ececec;
+}
+
+/* Tablet */
+
+@media (min-width: 600px) {
+    .grid-container {
+        display: grid;
+        gap: 2rem;
+        grid-template-columns: repeat(2, minmax(250px, 1fr));
+    }
+
+    .banner-text {
+        width: 60%;
+    }
+}
+
+/* Desktop */
+
+@media (min-width: 768px) {
+    .grid-container {
+        grid-template-columns: repeat(3, minmax(250px, 1fr));
+    }
+
+    .banner img {
+        height: 100vh;
+    }
+
+    .banner-text {
+        width: 40%;
+    }
+
+    .banner-text h1 {
+        font-size: clamp(2.5rem, 4vw, 4rem);
+    }
+}

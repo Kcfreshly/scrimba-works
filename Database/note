@@ -1,0 +1,121 @@
+INSERT INTO cars
+      (brand, model, year, price, color, condition, sold)
+  VALUES 
+    ('Ford', 'Mustang', 1965, 45000, 'white', 4, false),
+    ('Chevrolet', 'Camaro', 1970, 48000, 'red', 2, false);
+
+
+**********************
+UPDATE
+**************
+UPDATE cars SET
+	dealership_id = 1
+WHERE
+	dealership_id IS NULL;
+
+
+
+**********************
+ALTER
+**************
+ALTER TABLE cars
+ADD COLUMN dealership_id INTEGER;
+
+
+-- 3. Add the NOT NULL constraint
+ALTER TABLE cars
+ALTER COLUMN dealership_id SET NOT NULL;
+
+
+-- 4. Add the foreign key constraint
+ALTER TABLE cars
+ADD CONSTRAINT dealership_fk FOREIGN KEY (dealership_id)
+REFERENCES dealerships(id);
+
+/*
+	Alter the cars table
+		add a not null constraint to these columns:
+			brand
+			model
+			year
+			price
+			color
+			condition
+			sold
+*/
+
+ALTER TABLE cars
+ALTER COLUMN brand SET NOT NULL,
+ALTER COLUMN model SET NOT NULL,
+ALTER COLUMN year SET NOT NULL,
+ALTER COLUMN price SET NOT NULL,
+ALTER COLUMN color SET NOT NULL,
+ALTER COLUMN condition SET NOT NULL,
+ALTER COLUMN sold SET NOT NULL;
+
+
+
+*********************
+DELETE
+*********************
+DELETE FROM cars
+WHERE condition = 0;
+
+
+********************
+CREATE TABLE
+********************
+CREATE TABLE IF NOT EXISTS sold_cars (
+  id SERIAL PRIMARY KEY,
+  cars_id INTEGER NOT NULL REFERENCES cars(id),
+  seller INTEGER NOT NULL REFERENCES staff(id),
+  sold_date DATE NOT NULL,
+  sold_price INTEGER NOT NULL
+);
+
+
+
+*******************
+AGGREGATE
+*******************
+
+SELECT city, state, COUNT(C.id) AS car_count
+	FROM cars C
+	RIGHT JOIN dealerships D ON dealership_id = D.id
+WHERE sold IS NOT TRUE
+GROUP BY city, state
+ORDER BY car_count;
+
+
+SELECT name, role, SUM(sold_price) AS total_sales
+	FROM staff S
+	FULL JOIN sold_cars ON S.id = seller
+WHERE role = 'Salesperson'
+GROUP BY name, role
+ORDER BY total_sales DESC;
+
+
+
+*************************
+SQL INJECTION
+*************************
+
+const userInput = `'Ford' OR 1=1`;
+
+// this injection will always return true for all rows in the database, 
+// allowing an attacker to retrieve all records from the cars table, regardless of the intended filter.
+
+  // Load the SQL query file
+  let query = fs.readFileSync('query.sql', 'utf8');
+
+  // Replace placeholder with user input
+  query = query.replace('<<BRAND>>', userInput);
+
+  // use params to safely pass user input to the query, preventing SQL injection attacks.
+  query = 'SELECT * FROM cars WHERE brand = $1';
+
+// Load the SQL query file
+  let query = fs.readFileSync('query.sql', 'utf8');
+
+  // Replace placeholder with user input
+  query = db.query('<<BRAND>>', [userInput]);
