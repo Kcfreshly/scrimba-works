@@ -1,0 +1,223 @@
+create a package json file with
+npm init
+
+name: wild-horizons
+version: default
+description: a dataset of the planet’s most interesting places
+entry point: server.js
+test command: default
+git repository: default
+keywords: default
+authour: your name
+license: default
+
+Remember: hit enter to accept the default option
+
+
+************************************
+HTTP Module
+**********************
+
+To create a server you need node http module
+
+import http from 'node:http'
+()
+make sure you add 
+type: module in package.json
+
+create server
+
+const server = http.create(Server(req, res)=>{
+    res.end("hello from server)
+})
+
+server.listen(8000, ()=> `server running on port ${PORT}`)
+
+const server = http.createServer( (req, res)=> {
+  res.write('This is some data \n')
+  res.write('This is some more data \n')
+  res.end('This is from the server', 'utf8', ()=> console.log('response end'))
+})
+
+server.listen(PORT, () => console.log(`Connected on port: ${PORT}`))
+
+you must always res.end() this will always finish the response
+
+#### res.writeHead can be used instead of res.setHeader
+  res.setHeader('Content-Type', 'application/json')
+  res.setHeader('Access-Control-Allow-Origin', '*') // allow access from any domain
+  res.setHeader('Access-Control-Allow-Methods', 'GET') // GET method only
+
+  The only caveat is writeHead stops any further modificaiton to the request, nothing else
+  after it with res.setHeader or writeHead works. 
+
+  Just stick to res.setHeader excep you have an explicit reason
+
+
+**********************
+PATHS AND ROUTING
+********
+
+import.meta : gives us several attributes and one is the current root absolute directory
+const __dir = import.meta.dirname
+
+process.cwd() : this tells you your current working directory
+
+import path from 'node:path'
+
+path.join(__dirname, 'public', 'index.html') : this will be an absolute path
+path.join('public', 'index.html') : this will be a relative path
+
+***********************
+FS Module
+**********
+
+fs.readFileSync(path)----------:  This is a synchronous call hence not encouraged
+
+const pathToResource = path.join(__dirname, 'public', 'index.html')
+const content = await fs.readFileSync(pathToResource, 'utf8')
+
+res.statusCode = 200
+res.setHeader('Content-Type', 'text/html')
+res.end(content)
+
+fs.readFile(path) --------: Async but Too much code also not encouraged
+const server = http.createServer((req, res) => {
+
+  const pathToResource = path.join(__dirname, 'public', 'index.html')
+
+  fs.readFile(pathToResource, 'utf8', (err, content) => {
+    if (err) {
+      console.log(err)
+      return
+    }
+    res.statusCode = 200
+    res.setHeader('Content-Type', 'text/html')
+    res.end(content)
+  })
+
+})
+
+await fs.readFile(path) : make req and res call back async function and this is way cleaner
+
+const server = http.createServer((req, res) => {
+
+  const pathToResource = path.join(__dirname, 'public', 'index.html')
+
+  const content = fs.readFile(pathToResource, 'utf8')
+    res.statusCode = 200
+    res.setHeader('Content-Type', 'text/html')
+    res.end(content)
+
+
+})
+
+
+You can remove the specific resource type such as utf8 and fs will return a buffer output
+setHeader will encode it to the right data type
+
+
+
+********************
+Global vars
+******
+
+if type in package json is commonjs
+
+then import http from 'node:http' will not working
+
+you will need to do const http = require('http')
+
+Global variables after e.g below will only work with commonjs not with module
+__dirname
+__filename
+
+/* commonJS */
+
+// console.log(__dirname)
+// console.log(__filename)
+
+/* ES Modules before v20 */
+
+import path from 'node:path'
+import url from 'node:url'
+
+const __filename = url.fileURLToPath(import.meta.url)
+const __dirname = path.dirname(__filename)
+
+console.log(__filename)
+console.log(__dirname)
+
+
+/* ES Modules using import.meta v20+ */
+
+// console.log(import.meta.dirname)
+// console.log(import.meta.filename)
+
+
+
+******************************
+Events
+An event signals that something happened
+Maybe a user clicked a button
+file finished downloading
+A network request is recieved. etc.
+**********
+
+// import EventEmitter
+import { EventEmitter } from 'node:events'
+
+const customerDetails = {
+  fullName: 'Meryl Sheep',
+  email: 'baah@thedevilwearswool.com',
+  phone: 12345678910
+}
+
+// create the emitter
+const emailRequestEmitter = new EventEmitter()
+
+// define the listener function
+function generateEmail(customer) {
+  console.log(`Email generated for ${customer.email}`)
+}
+
+// register the listener
+emailRequestEmitter.on('emailRequest', generateEmail)
+emailRequestEmitter.on('emailRequest', () => console.log('task assigned'))
+emailRequestEmitter.on('emailRequest', () => console.log('email logged'))
+
+// emit the event
+setTimeout(()=> {
+  emailRequestEmitter.emit('emailRequest', customerDetails)
+}, 2000)
+
+
+
+********************
+SSE (Server sent event)
+provide a constant stream of data to the client
+Mostly used for applications where data only flows one any
+no response from the client is needed.
+e.g:
+breaking news
+Live monitoring
+sport scores
+**********
+
+
+*********************
+CORS
+*************
+res.setHeader('Access-Control-Allow-Origin', '*') // allow access from any domain
+  res.setHeader('Access-Control-Allow-Methods', 'GET') // GET method only
+
+
+
+*******************
+Nodeman
+***************
+npm install -D nodemon
+
+
+in scripts
+"dev": "nodemon server.js"
