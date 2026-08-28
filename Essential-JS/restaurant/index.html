@@ -1,0 +1,89 @@
+<html>
+    <head>
+        <link rel="stylesheet" href="index.css">
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+		<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Smythe&display=swap" rel="stylesheet">
+    </head>
+    <body>
+    <img class="main-image" src="./images/banner.png" alt="placeholder image">
+    <div class="menu" id="menu">
+
+        <section class="section menu-container" id="menu-container"></section>
+        
+        <section class="order-container" id="order-container">
+
+            <p class="order-list-title" style="text-align: center;">Your order</p>
+            <div class="order-list-items" id="order-list-items"></div>
+            <div class="order-list-total" id="order-list-total">
+                <span>Total price: </span>
+                <span class="menu-price" id="total-price">$0.00</span>
+            </div>
+
+            <button class="complete-order-btn" id="complete-order-btn">Complete order</button>
+
+        </section>
+
+        <div class="modal hidden" id="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2 style="text-align: center;">Enter your card details</h2>
+                    <span class="close" id="close">&times;</span>
+                </div>
+                <form class="login-form" id="login-form">
+
+                    <input
+                        required
+                        type="text"
+                        id="fullname"
+                        name="fullname"
+                        placeholder="Enter your name"
+                        minlength="2"
+                        maxlength="50"
+                        pattern="[A-Za-z\s]+"
+                        title="Name should contain only letters and spaces"
+                    >
+
+                    <input
+                        required
+                        type="text"
+                        id="card-number"
+                        name="card-number"
+                        placeholder="1234567812345678"
+                        inputmode="numeric"
+                        pattern="[0-9]{16}"
+                        maxlength="16"
+                        autocomplete="off"
+                        title="Card number must be exactly 16 digits"
+                    >
+
+                    <input
+                        required
+                        type="text"
+                        id="cvv"
+                        name="cvv"
+                        placeholder="123"
+                        inputmode="numeric"
+                        pattern="[0-9]{3}"
+                        maxlength="3"
+                        autocomplete="off"
+                        title="CVV must be exactly 3 digits"
+                    >
+
+                    <button class="pay-btn" id="pay-btn" type="submit">
+                        Pay
+                    </button>
+
+                </form>
+                
+            </div>
+
+            
+        </div>
+        <div class="thank-you-message hidden" id="thank-you-message">Thanks James! Your order is on its way!</div>
+    </div>
+	<script src="index.js" type="module"></script>
+    </body>
+</html>
+

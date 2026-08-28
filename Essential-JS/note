@@ -1,0 +1,219 @@
+import { useReducer } from "react";
+
+playthml =[]
+
+playlist.forEach(function(){
+
+    playthml.push(`<div class="song">
+    <h3>${song.title}</h3>
+    <p>${song.artist}</p>
+    </div>`);
+})
+
+for each can iterate through items but does not return a new array. It is used to perform an action for each item in the array, 
+
+
+==============================================================================
+
+while map returns a new array with the results of calling a provided function on every element in the calling array.
+
+playlist.map(function(song, index){
+
+    return `<div class="song">
+    <h3>${song.title}</h3>
+    <p>${song.artist}</p>
+    </div>`;
+})
+
+filter is used to create a new array with all elements that pass the test implemented by the provided function. It returns a new array with only the elements that meet the specified condition.
+
+playlist.filter(function(song){
+    return song.artist === "Adele";
+})
+
+
+==============================================================================
+
+include is used to check if an array contains a certain element. It returns true if the element is found, and false otherwise.
+
+const artists = playlist.map(function(song){
+    return song.artist;
+})
+
+const hasAdele = artists.includes("Adele");
+
+
+==============================================================================
+
+forloop is a traditional loop that allows you to iterate over an array using an index. It gives you more control over the iteration process, but it can be more verbose than using higher-order functions like forEach, map, or filter.
+
+for (let i = 0; i < playlist.length; i++) {
+    const song = playlist[i];
+    console.log(song.title);
+}
+
+
+==============================================================================
+
+Danger of InnerHTML: Using innerHTML can be dangerous if you're inserting user-generated content into the DOM, as it can lead to cross-site scripting (XSS) attacks. Always sanitize user input before inserting it into the DOM.
+
+if a user comes to a text field and paste a bad script e.g
+<button onclick="document.getElementById('film-list-app').innerHTML='<h1>Now I own your site 😭</h1>'">Click Me ☣️</button>
+
+assuming your js looks like this
+const filmInput = document.getElementById('film-input')
+const addBtn = document.getElementById('add-btn')
+const filmList = document.getElementById('film-list')
+
+addBtn.addEventListener('click', function() {
+    filmList.innerHTML += `
+        <div class="film-item">${filmInput.value}</div>
+        `
+    filmInput.value = ''
+}) 
+
+that script will run and replace the entire content of the film-list-app with the message "Now I own your site 😭". This is a classic example of an XSS attack, where malicious code is injected into a web page. To prevent this, always sanitize user input before inserting it into the DOM, or use safer methods like textContent or createElement to add content.
+
+best method is to build the element using createElement and appendChild, which does not interpret the content as HTML, thus preventing XSS attacks. For example:
+
+addBtn.addEventListener('click', function() {
+    const newFilm = document.createElement('div')
+    newFilm.classList.add('film-item')
+    newFilm.textContent = filmInput.value
+    filmList.appendChild(newFilm)
+    filmInput.value = ''
+}) 
+
+
+==============================================================================
+
+this is function declaration, it is hoisted to the top of the scope, meaning you can call it before it's defined in the code.
+function getSpendAlert(amount) {
+    return `Warning! You just spent £${amount}!`
+}
+
+console.log(getSpendAlert(100))
+
+function expression is not hoisted, meaning you cannot call it before it's defined in the code.
+const getSpendAlert = function(amount) {
+    return `Warning! You just spent £${amount}!`
+}
+
+console.log(getSpendAlert(100))
+
+
+==============================================================================
+export default is used to export a single value or function from a module, allowing it to be imported with any name in another module.
+while export is used to export multiple values or functions from a module, allowing them to be imported with their original names in another module.
+e.g:
+export default function getSpendAlert(amount) {
+    return `Warning! You just spent £${amount}!`
+}
+
+export function getSpendAlert(amount) {
+    return `Warning! You just spent £${amount}!`
+}
+
+==============================================================================
+
+.reduce() is a method that executes a reducer function on each element of the array, resulting in a single output value. 
+It takes two arguments: a callback function and an optional initial value. 
+The callback function takes four arguments: accumulator, currentValue, currentIndex, and array.
+const numbers = [1, 2, 3, 4, 5];
+const sum = numbers.reduce(function(accumulator, currentValue) {
+    return accumulator + currentValue;
+}, 0);
+
+console.log(sum); // Output: 15
+
+==============================================================================
+object with methods: An object can have properties and methods. Methods are functions that are defined as properties of an object. 
+They can be called using the dot notation or bracket notation.
+const gamer = {
+    name: 'Dave',
+    score: 0,
+    incrementScore: function(){
+        this.score++   
+    }
+}
+
+const gamer1 = {
+    name: 'Sarah',
+    score: 0,
+    incrementScore: function(){
+        this.score++   
+    }
+}
+
+gamer.incrementScore()
+gamer1.incrementScore()
+console.log(gamer)
+console.log(gamer1)
+
+==============================================================================
+constructor function: A constructor function is a special type of function that is used to create objects. 
+It is called with the 'new' keyword and can have properties and methods defined within it. 
+The 'this' keyword refers to the newly created object.
+
+function Gamer(name){
+    this.name = name
+    this.score = 0
+    this.incrementScore = function(){
+        this.score++  
+    }
+}
+
+const dave = new Gamer('Dave', 0)
+const sarah = new Gamer('Sarah', 0)
+const kerry = new Gamer('Kerry', 0)
+dave.incrementScore()
+sarah.incrementScore()
+sarah.incrementScore()
+kerry.incrementScore()
+kerry.incrementScore()
+kerry.incrementScore()
+console.log(dave)
+console.log(sarah)
+console.log(kerry)
+
+========================================================================
+class is a template for creating objects with shared properties and methods. It provides a way to define the structure and behavior 
+of objects in a more organized manner. Classes can have constructors, methods, and can be extended to create subclasses.
+
+class Character {
+    constructor(name) {
+        this.name = name
+        this.collectedItemsArr = []
+    }
+    
+    addItem(item){
+        this.collectedItemsArr.push(item)
+        console.log(`${this.name} now has: ${this.collectedItemsArr.join(', ')}`)    
+    }
+}
+
+const wizard = new Character('Merlin')
+const witch = new Character('Hermione')
+wizard.addItem('a wand')
+wizard.addItem('a map')
+wizard.addItem('a rope')
+witch.addItem('a map')
+witch.addItem('a rope')
+
+
+=========================================================================
+try and catch are used for error handling in JavaScript. The code inside the try block is executed, and if an error occurs, the control is passed to the catch block where you can handle the error gracefully.
+
+function addTouristSurcharge(payment) {
+    try {
+        if (typeof payment === 'number') {
+            console.log(payment + 10)
+        } else {
+            throw new ReferenceError('payment is not a number')
+        }
+    } catch (err) {
+        console.error('Error: ' + err)
+    }
+}
+
+addTouristSurcharge('60')
