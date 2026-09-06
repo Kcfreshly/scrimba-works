@@ -50,3 +50,317 @@ function Greeting(props) {
   const isLoggedIn = props.isLoggedIn
   return isLoggedIn ? <UserGreeting /> : <GuestGreeting />
 }
+
+
+//Difference between Props and state
+
+/*
+Props refers to the ppty being passed into a component in order for it to work correctly. A component is not allowed to modify those props, they are immutable
+
+State refer to values that are managed by the component, similar to variables declared inside a function. Anytim you ave chaning values that should be saved or displayed, you will likely be using state
+
+
+Words to Note:
+
+Render:
+React runs your funciton and dsplay whateer gets returned.
+The function will only be run again if it recieves a new 
+
+SetState:
+Changing a local non state variable does not cause react to rerender the component. changing state with a built setstate function does
+
+View = Function (State) :
+When a state changes and react rerenders your component, something new gets returned and replaces what used to be on the page.
+
+*/  
+
+const [count, setCount] = React.useState(0)
+/**
+  * Note: if you ever need the old value of state
+  * to help you determine the new value of state,
+  * you should pass a callback function to your
+  * state setter function instead of using
+  * state directly. This callback function will
+  * receive the old value of state as its parameter,
+  * which you can then use to determine your new
+  * value of state.
+  */
+function add() {
+    setCount(prevCount=> prevCount + 1)
+}
+
+
+in React we do not want to adjust a state variable directly
+e.g count++ will adjust original array which is bad, even count = count +1 still changes original array
+best option is (count + 1) here you are not modifying the array, you are only adding a value to the outcome of the array
+
+This sam principle applies to list, we cannot adjust the variable of a state directly, 
+e.g 
+const [things, setThings] = useState([])
+
+we cant do
+things.push(item) // this means we are modifying the list directly. to fix this we use the call back in set funciton and a spread operator
+
+setThings(prevThings => [...prevThings, <new items list>]) // This way we say get all items in that array create a new one andpush these new items into it
+
+import React from "react"
+
+export default function App() {
+    const [myFavoriteThings, setMyFavoriteThings] = React.useState([])
+
+    const allFavoriteThings = ["💦🌹", "😺", "💡🫖", "🔥🧤", "🟤🎁",
+        "🐴", "🍎🥧", "🚪🔔", "🛷🔔", "🥩🍝"]
+    const thingsElements = myFavoriteThings.map(thing => <p key={thing}>{thing}</p>)
+
+    function addFavoriteThing() {
+        setMyFavoriteThings(
+            prevFavThings => [
+                ...prevFavThings,
+                allFavoriteThings[prevFavThings.length]
+            ]
+        )
+    }
+
+    return (
+        <main>
+            <button onClick={addFavoriteThing}>Add item</button>
+            <section aria-live="polite">
+                {thingsElements}
+            </section>
+        </main>
+    )
+}
+
+
+Changin state for complex state objects like arrays or objects can be tricky. React state should be treated as immutable, meaning you should not modify the existing state directly. Instead, you should create a new copy of the state with the necessary changes and then set that new state.
+
+
+export default function App() {
+    const [contact, setContact] = React.useState({
+        firstName: "John",
+        lastName: "Doe",
+        phone: "+1 (212) 555-1212",
+        email: "itsmyrealname@example.com",
+        isFavorite: true
+    })
+    
+    let starIcon = contact.isFavorite ? starFilled : starEmpty
+
+    function toggleFavorite() {
+        setContact(prevContact => {
+            return {
+                ...prevContact,
+                isFavorite: !prevContact.isFavorite
+            }
+        })
+    }
+}
+
+
+Understanding React and DOM Elements: React is a JavaScript library for building user interfaces, and it uses a virtual DOM to efficiently update the UI. The virtual DOM is a lightweight representation of the actual DOM, allowing React to determine the minimal set of changes needed to update the UI. This results in improved performance and a smoother user experience.
+There's an important correction first:
+
+React is not a DOM element.
+
+What people usually mean is that React creates/manages DOM elements, while HTML describes them directly.
+
+Suppose you write normal HTML:
+
+<h1>Hello Michael</h1>
+
+The browser reads this HTML and creates an actual DOM object in memory representing that <h1>.
+
+Think:
+
+HTML text
+   ↓ browser parses it
+<h1>Hello Michael</h1>
+   ↓
+Actual DOM element in browser memory
+   ↓
+HTMLHeadingElement
+
+The DOM (Document Object Model) is basically the browser's JavaScript representation of the webpage.
+
+You can prove that HTML becomes objects:
+
+const heading = document.querySelector("h1")
+
+console.log(heading)
+
+heading isn't a string containing:
+
+<h1>Hello Michael</h1>
+
+It's a real JavaScript-accessible DOM object with properties and methods:
+
+heading.textContent
+heading.className
+heading.remove()
+heading.addEventListener(...)
+Now React
+
+In React you write JSX:
+
+const heading = <h1>Hello Michael</h1>
+
+This looks like HTML, but it isn't HTML.
+
+JSX gets transformed into JavaScript roughly equivalent to:
+
+const heading = React.createElement(
+    "h1",
+    null,
+    "Hello Michael"
+)
+
+And that produces a React element — essentially a JavaScript description saying:
+
+{
+    type: "h1",
+    props: {
+        children: "Hello Michael"
+    }
+}
+
+That React element is still not the real DOM element.
+
+React eventually takes that description and tells the browser what actual DOM needs to exist:
+
+JSX
+<h1>Hello Michael</h1>
+        ↓
+React Element
+{ type: "h1", props: {...} }
+        ↓
+React DOM
+        ↓
+Actual browser DOM
+<h1>Hello Michael</h1>
+        ↓
+Browser displays it
+This distinction becomes important with state
+
+Say you have:
+
+const [name, setName] = useState("Michael")
+
+return <h1>Hello {name}</h1>
+
+Initially React effectively has a description like:
+
+{
+    type: "h1",
+    children: "Hello Michael"
+}
+
+and the browser DOM ends up displaying:
+
+<h1>Hello Michael</h1>
+
+Then:
+
+setName("John")
+
+React runs your component again, gets a new React element description:
+
+{
+    type: "h1",
+    children: "Hello John"
+}
+
+React sees what changed and updates the actual DOM accordingly.
+
+So keep these three things separate in your head:
+
+HTML        → markup language describing a page
+
+DOM         → browser's actual object representation of the page
+
+React       → JavaScript library that creates descriptions
+              of UI and manages changes to the DOM
+
+And JSX is the HTML-looking syntax React developers use to conveniently create those React element descriptions.
+
+
+
+//Form Basics: Forms in React are used to collect user input and handle form submissions. React provides controlled components, where the form elements' values are controlled by the component's state. This allows for real-time validation, dynamic updates, and better control over the form's behavior.
+
+function App() {
+  
+  function handleSubmit(event) {
+    event.preventDefault()
+    const formEl = event.currentTarget
+    const formData = new FormData(formEl)
+    const email = formData.get("email")
+    // Gather the info from the form
+    // Submit it to a backend
+    formEl.reset()
+  }
+  
+  return (
+    <section>
+      <h1>Signup form</h1>
+      <form onSubmit={handleSubmit} method="post">
+        <label htmlFor="email">Email:</label>
+        <input id="email" type="email" name="email" placeholder="joe@schmoe.com" />
+        <br />
+        
+        <label htmlFor="password">Password:</label>
+        <input id="password" type="password" name="password" />
+        <br />
+        
+        <button>Submit</button>
+        
+      </form>
+    </section>
+  )
+}
+
+
+our above method of handling forms is more imperative, we can also use a more declarative approach by using state to manage the form inputs. This allows for better control and validation of the form data.
+
+function App() {
+  
+  function signUp(formData) {
+    const email = formData.get("email")
+    console.log(email)
+  }
+  
+  return (
+    <section>
+      <h1>Signup form</h1>
+      <form action={signUp}>
+        <label htmlFor="email">Email:</label>
+        <input id="email" type="email" name="email" placeholder="joe@schmoe.com" />
+        <br />
+        
+        <label htmlFor="password">Password:</label>
+        <input id="password" type="password" name="password" />
+        <br />
+        
+        <button>Submit</button>
+        
+      </form>
+    </section>
+  )
+}
+
+//TextArea: A textarea is a form element that allows users to input multi-line text. In React, you can create a controlled textarea component by managing its value through state. This enables you to capture user input and respond to changes in real-time.
+
+//Default value of a textarea can be set using the defaultValue attribute, while the value attribute can be used to create a controlled component that updates its state based on user input.
+
+  <label htmlFor="email">Email:</label>
+  <input id="email" defaultValue="joe@schmoe.com" type="email" name="email" placeholder="joe@schmoe.com" />
+
+  <label htmlFor="password">Password:</label>
+  <input id="password" defaultValue="password123" type="password" name="password" />
+
+  <label htmlFor="description">Description:</label>
+  <textarea id="description" name="description" defaultValue="Enter your description here..."></textarea>
+
+
+//Radio Buttons: Radio buttons are form elements that allow users to select one option from a set of predefined choices. In React, you can create controlled radio button components by managing their selected value through state. This enables you to capture user selections and respond to changes in real-time.
+
+  <label>
+    <input type="radio" name="gender" value="male" checked={selected

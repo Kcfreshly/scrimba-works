@@ -196,7 +196,7 @@ setTimeout(()=> {
 ********************
 SSE (Server sent event)
 provide a constant stream of data to the client
-Mostly used for applications where data only flows one any
+Mostly used for applications where data only flows one way
 no response from the client is needed.
 e.g:
 breaking news
