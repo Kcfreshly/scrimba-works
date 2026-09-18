@@ -99,7 +99,7 @@ e.g
 const [things, setThings] = useState([])
 
 we cant do
-things.push(item) // this means we are modifying the list directly. to fix this we use the call back in set funciton and a spread operator
+things.push(item) // this means we are modifying the list directly. to fix this we use the call back in set function and a spread operator
 
 setThings(prevThings => [...prevThings, <new items list>]) // This way we say get all items in that array create a new one andpush these new items into it
 
@@ -318,7 +318,8 @@ function App() {
 }
 
 
-our above method of handling forms is more imperative, we can also use a more declarative approach by using state to manage the form inputs. This allows for better control and validation of the form data.
+our above method of handling forms is more imperative, we can also use a more declarative approach by using state to manage the form inputs. 
+This allows for better control and validation of the form data.
 
 function App() {
   
@@ -331,6 +332,9 @@ function App() {
     <section>
       <h1>Signup form</h1>
       <form action={signUp}>
+        //action prop is a function that will be called when the form is submitted. 
+        //The function will receive a FormData object containing the form data. This allows for a more declarative approach to handling form submissions, 
+        //as you can define the behavior of the form in a single place.
         <label htmlFor="email">Email:</label>
         <input id="email" type="email" name="email" placeholder="joe@schmoe.com" />
         <br />
@@ -363,4 +367,27 @@ function App() {
 //Radio Buttons: Radio buttons are form elements that allow users to select one option from a set of predefined choices. In React, you can create controlled radio button components by managing their selected value through state. This enables you to capture user selections and respond to changes in real-time.
 
   <label>
-    <input type="radio" name="gender" value="male" checked={selected
+    <input type="radio" name="gender" value="male"
+    
+
+
+//  Conditonal Rendering: Conditional rendering in React allows you to render different components or elements 
+  based on certain conditions. This is typically done using JavaScript conditional statements (like if-else) 
+  or ternary operators within the JSX. It enables dynamic UI updates based on the application state or props.
+
+  E.g
+  {isLoggedIn ? <UserGreeting /> : <GuestGreeting />}
+
+  {
+    isLoggedIn && <UserGreeting /> // this will render the UserGreeting component only if isLoggedIn is true
+  }
+
+
+{props.setup && <h3>{props.setup}</h3>}
+{isShown ? <p>{props.punchline}</p> : null}
+<button onClick={toggleShown}>{isShown ? "Hide" : "Show"} punchline</button>
+
+{
+    unreadMessages.length > 0 && 
+    <h1>You have {unreadMessages.length} unread messages!</h1>
+}
