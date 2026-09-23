@@ -1,0 +1,152 @@
+// useEffect — short reference
+
+// Use useEffect when your component needs to synchronize with something outside React.
+
+// Common examples:
+
+// Fetch data when component loads
+useEffect(() => {
+    fetchData()
+}, [])
+
+// React to a changing value
+useEffect(() => {
+    document.title = username
+}, [username])
+
+// Subscribe and clean up
+useEffect(() => {
+    const connection = connect()
+
+    return () => connection.disconnect()
+}, [])
+
+// Think external side effects: API/network requests, timers, browser APIs, subscriptions, WebSockets/SSE, third-party libraries.
+
+// Don't use useEffect for normal calculations/rendering:
+
+// ❌ unnecessary
+useEffect(() => {
+    setFullName(firstName + " " + lastName)
+}, [firstName, lastName])
+
+// ✅ just calculate it
+const fullName = firstName + " " + lastName
+
+// And don't use it for user actions that can happen directly in an event handler:
+
+// ✅
+function handleClick() {
+    setCount(count + 1)
+}
+
+// Mental rule:
+
+// React state/props → calculate during render
+// User action       → event handler
+// External system   → useEffect
+
+// useEffect is basically: “After React renders, synchronize this component with something external.”
+
+
+
+
+//Use effect Cleanup
+// When you use useEffect, you can return a function from the effect. This function will be called when the component 
+// unmounts or before the effect runs again. This is useful for cleaning up subscriptions, timers, 
+// or other resources that were created in the effect.
+
+
+export default function WindowTracker() {
+    const [windowWidth, setWindowWidth] = React.useState(window.innerWidth)
+    
+    React.useEffect(() => {
+        function watchWindowWidth () {
+            console.log("Resized")
+            setWindowWidth(window.innerWidth)
+        }
+        window.addEventListener("resize", watchWindowWidth)
+        return function() {
+            console.log("Cleaning up...")
+            window.removeEventListener("resize", watchWindowWidth)
+        }
+    }, [])
+    
+    return (
+        <h1>Window width: {windowWidth}</h1>
+    )
+}
+
+
+
+//REFS
+//useRef is a React hook that allows you to create a mutable reference to a DOM element or a value that persists across renders. 
+// It can be used to access and manipulate DOM elements directly, store values that don't trigger re-renders, 
+// and manage focus or animations.
+
+    const [recipe, setRecipe] = React.useState("")
+    const recipeSection = React.useRef(null)
+
+    async function getRecipe() {
+        const recipeMarkdown = await getRecipeFromChefClaude(ingredients)
+        setRecipe(recipeMarkdown)
+    }
+
+    function addIngredient(formData) {
+        const newIngredient = formData.get("ingredient")
+        setIngredients(prevIngredients => [...prevIngredients, newIngredient])
+    }
+    
+    return (
+        <main>
+            <form action={addIngredient} className="add-ingredient-form">
+                <input
+                    type="text"
+                    placeholder="e.g. oregano"
+                    aria-label="Add ingredient"
+                    name="ingredient"
+                />
+                <button>Add ingredient</button>
+            </form>
+
+            {ingredients.length > 0 &&
+                <IngredientsList
+                    ref={recipeSection}
+                    ingredients={ingredients}
+                    getRecipe={getRecipe}
+                />
+            }
+
+            {recipe && <ClaudeRecipe recipe={recipe} />}
+        </main>
+    )
+
+
+export default function IngredientsList(props) {
+const ingredientsListItems = props.ingredients.map(ingredient => (
+    <li key={ingredient}>{ingredient}</li>
+))
+return (
+    <section>
+        <h2>Ingredients on hand:</h2>
+        <ul className="ingredients-list" aria-live="polite">{ingredientsListItems}</ul>
+        {props.ingredients.length > 3 && <div className="get-recipe-container">
+            <div ref={props.ref}>
+                <h3>Ready for a recipe?</h3>
+                <p>Generate a recipe from your list of ingredients.</p>
+            </div>
+            <button onClick={props.getRecipe}>Get a recipe</button>
+        </div>}
+    </section>
+)
+}
+
+
+//lazy initialization of state
+// If the initial state is the result of an expensive computation, you can provide a function to useState. 
+// The function will only be executed on the initial render, and the returned value will be used as the initial state.
+// This is called lazy initialization of state.
+// so react will not call that function on every render but only on the first render and when the function is explicitly called, 
+// this can be useful for performance optimization in certain scenarios.
+
+const [dice, setDice] = useState(() => generateAllNewDice())

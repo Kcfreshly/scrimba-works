@@ -1,5 +1,6 @@
-import Header from "./Header"
-import Main from "./Main"
+/** @jsxRuntime automatic */
+import Header from "./components/Header.jsx"
+import Main from "./components/Main.jsx"
 
 export default function App() {
   return (

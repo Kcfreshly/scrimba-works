@@ -1,4 +1,5 @@
-import chefClaudeLogo from "./images/chef-claude-icon.png"
+/** @jsxRuntime automatic */
+import chefClaudeLogo from "../images/chef-claude-icon.png"
 
 export default function Header() {
     return (
